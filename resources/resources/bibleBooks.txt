@@ -1,0 +1,74 @@
+Genesis,Gen,50,Genesis,Gen
+Exodus,Exod,40,Exodus
+Levitikus,Lev,27,Levitikus, Lev
+Numeri,Num,36,Numeri
+Deuteronomium,Deut,34,Deuteronomium
+Josua,Josh,24,Josua
+Richter,Judg,21,Richter
+Rut,Ruth,4,Rut
+1 Samuel,1Sam,31,1 Samuel,1_Samuel,1Samuel
+2 Samuel,2Sam,24,2 Samuel,2_Samuel,2Samuel
+1 Könige,1Kgs,22,1 Könige,1_Könige,1Könige
+2 Könige,2Kgs,25,2 Könige,2_Könige,2Könige
+1 Chronik,1Chr,29,1 Chronik,1_Chronik,1Chronik
+2 Chronik,2Chr,36,2 Chronik,2_Chronik,2Chronik
+Esra,Ezra,10,Esra
+Nehemia,Neh,13,Nehemia
+Ester,Esth,10,Ester
+Ijob,Job,42,Ijob
+Psalm,Ps,150,Psalm
+Sprichwörter,Prov,31,Sprüche,Spr
+Kohelet,Eccl,12,Kohelet
+Hohelied,Song,8,Hohelied
+Jesaja,Isa,66,Jesaja
+Jeremia,Jer,52,Jeremia,Jer
+Klagelieder,Lam,5,Klagelieder
+Ezechiel,Ezek,48,Ezechiel
+Daniel,Dan,14,Daniel
+Hosea,Hos,14,Hosea
+Joel,Joel,4,Joel
+Amos,Amos,9,Amos
+Obadja,Obad,1,Obadja
+Jona,Jonah,4,Jona
+Micha,Mic,7,Micha
+Nahum,Nah,3,Nahum
+Habakuk,Hab,3,Habakuk
+Zefanja,Zeph,3,Zefanja
+Haggai,Hag,2,Haggai
+Sacharja,Zech,14,Sacharja,Sach
+Maleachi,Mal,3,Maleachi
+Matthäus,Matt,28,Matthäus,Mt
+Markus,Mark,16,Markus,Mk
+Lukas,Luke,24,Lukas
+Johannes,John,21,Johannes,Joh
+Apostelgeschichte,Acts,28,Apostelgeschichte,Apg
+Römer,Rom,16,Römer
+1 Korinther,1Cor,16,1 Korinther,1_Korinther,1Korinther
+2 Korinther,2Cor,13,2 Korinther,2_Korinther,2Korinther
+Galater,Gal,6,Galater,Gal
+Epheser,Eph,6,Epheser,Eph
+Philipper,Phil,4,Philipper
+Kolosser,Col,4,Kolosser,Kol
+1 Thessalonicher,1Thess,5,1 Thessalonicher,1_Thessalonicher,1Thessalonicher
+2 Thessalonicher,2Thess,3,2 Thessalonicher,2_Thessalonicher,2Thessalonicher
+1 Timotheus,1Tim,6,1 Timotheus,1_Timotheus,1Timotheus
+2 Timotheus,2Tim,4,2 Timotheus,2_Timotheus,2Timotheus
+Titus,Titus,3,Titus
+Philemon,Phlm,1,Philemon
+Hebräer,Heb,13,Hebräer,Hebr
+Jakobus,Jas,5,Jakobus
+1 Petrus,1Pet,5,1 Petrus,1_Petrus
+2 Petrus,2Pet,3,2 Petrus,2_Petrus
+1 Johannes,1John,5,1 Johannes,1_Johannes,1Johannes
+2 Johannes,2John,1,2 Johannes,2_Johannes,2Johannes
+3 Johannes,3John,1,3 Johannes,3_Johannes,3Johannes
+Judas,Jude,1,Judas
+Offenbarung,Rev,22,Offenbarung
+Baruch,Bar,6,Baruch
+Judit,Jdt,16,Judit
+1 Makkabäer,1Macc,16,1 Makkabäer,1_Makkabäer,1Makkabäer
+2 Makkabäer,2Macc,15,2 Makkabäer,2_Makkabäer,2Makkabäer
+Jesus Sirach,Sir,51,Jesus Sirach
+Tobit,Tob,14,Tobit
+Weisheit,Wis,19,Weisheit
+2 Esdras,2Esd,0,2 Esdras,2_Esdras,2Esdras

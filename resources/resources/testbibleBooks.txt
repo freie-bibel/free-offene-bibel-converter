@@ -1,0 +1,2 @@
+Genesis,Gen,50
+Exodus,Exod,40
