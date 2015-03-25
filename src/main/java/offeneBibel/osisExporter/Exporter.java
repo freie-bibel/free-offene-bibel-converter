@@ -207,6 +207,7 @@ public class Exporter
                 else {
                     node = result.resultValue;
                     ObAstFixuper.fixupAstTree(node);
+                    node.host(new EmptyVerseFixupVisitor());
                     if (cacheFile != null) {
                         cacheFile.getParentFile().mkdirs();
                         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(cacheFile))) {
@@ -268,7 +269,7 @@ public class Exporter
                 System.out.println(" Done.");
             }
 
-            if(false == m_commandLineArguments.m_skipGenerateWeb) {
+            if(m_commandLineArguments.m_generateWeb) {
                 System.out.print("Generating website backing files...");
                 generateWebViewerFragments(books, ObVerseStatus.values()[m_commandLineArguments.m_exportLevel]);
                 System.out.println(" Done.");
