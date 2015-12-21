@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2015 Patrick Zimmermann, Michael Schierl
+/* Copyright (C) 2013-2015 Patrick Zimmermann, Michael Schierl, Stephan Kreutzer
  *
  * This file is part of converter.
  *
@@ -20,6 +20,7 @@ package offeneBibel.osisExporter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import offeneBibel.parser.BookNameHelper;
 import offeneBibel.parser.ObAstNode;
 import offeneBibel.parser.ObFassungNode;
 import offeneBibel.parser.ObFassungNode.FassungType;
@@ -28,6 +29,7 @@ import offeneBibel.parser.ObParallelPassageNode;
 import offeneBibel.parser.ObTextNode;
 import offeneBibel.parser.ObVerseNode;
 import offeneBibel.parser.ObVerseStatus;
+import offeneBibel.parser.ObWikiLinkNode;
 import offeneBibel.visitorPattern.DifferentiatingVisitor;
 import offeneBibel.visitorPattern.IVisitor;
 
@@ -144,6 +146,11 @@ public class ObOsisGeneratorVisitor extends DifferentiatingVisitor<ObAstNode> im
                     // Quotations are not allowed inside of <hi/>, so wrap <hi/> around them.
                     m_currentFassung.append("</hi>");          
                 }
+                if (node.getParent().isDescendantOf(ObAstNode.NodeType.fat))
+                {
+                    // Quotations are not allowed inside of <hi/>, so wrap <hi/> around them.
+                    m_currentFassung.append("</hi>");
+                }
 
                 m_currentFassung.append("<q level=\"" + m_quoteCounter + "\" marker=\"\"" + end);
                 
@@ -151,6 +158,11 @@ public class ObOsisGeneratorVisitor extends DifferentiatingVisitor<ObAstNode> im
                 {
                     // Quotations are not allowed inside of <hi/>, so wrap <hi/> around them.
                     m_currentFassung.append("<hi type=\"italic\">");          
+                }
+                if (node.getParent().isDescendantOf(ObAstNode.NodeType.fat))
+                {
+                    // Quotations are not allowed inside of <hi/>, so wrap <hi/> around them.
+                    m_currentFassung.append("<hi type=\"bold\">");
                 }
             }
             else
@@ -165,6 +177,11 @@ public class ObOsisGeneratorVisitor extends DifferentiatingVisitor<ObAstNode> im
                     // Quotations are not allowed inside of <hi/>, so wrap <hi/> around them.
                     m_currentFassung.append("</hi>");          
                 }
+                if (node.getParent().isDescendantOf(ObAstNode.NodeType.fat))
+                {
+                    // Quotations are not allowed inside of <hi/>, so wrap <hi/> around them.
+                    m_currentFassung.append("</hi>");
+                }
 
                 if(quoteSearcher.foundQuote == false)
                     m_currentFassung.append("<q marker=\"\"" + end);
@@ -177,6 +194,11 @@ public class ObOsisGeneratorVisitor extends DifferentiatingVisitor<ObAstNode> im
                 {
                     // Quotations are not allowed inside of <hi/>, so wrap <hi/> around them.
                     m_currentFassung.append("<hi type=\"italic\">");          
+                }
+                if (node.getParent().isDescendantOf(ObAstNode.NodeType.fat))
+                {
+                    // Quotations are not allowed inside of <hi/>, so wrap <hi/> around them.
+                    m_currentFassung.append("<hi type=\"bold\">");
                 }
             }
         }
@@ -211,7 +233,12 @@ public class ObOsisGeneratorVisitor extends DifferentiatingVisitor<ObAstNode> im
 
         else if(node.getNodeType() == ObAstNode.NodeType.hebrew) {
             if(m_skipVerse) return;
-            m_currentFassung.append("<foreign xml:lang=\"he\">");
+
+            if (!node.getParent().isDescendantOf(ObAstNode.NodeType.wikiLink))
+            {
+                // foreign are not allowed inside of <a>, so skip them
+                m_currentFassung.append("<foreign xml:lang=\"he\">");
+            }
         }
 
         else if(node.getNodeType() == ObAstNode.NodeType.note) {
@@ -223,9 +250,33 @@ public class ObOsisGeneratorVisitor extends DifferentiatingVisitor<ObAstNode> im
             if (m_skipVerse) return;
             m_currentFassung.append("<hi type=\"italic\">");
         }
+        else if(node.getNodeType() == ObAstNode.NodeType.fat) {
+            if (m_skipVerse) return;
+            m_currentFassung.append("<hi type=\"bold\">");
+        }
         else if (node.getNodeType() == ObAstNode.NodeType.superScript) {
             if (m_skipVerse) return;
             m_currentFassung.append("<hi type=\"super\">");
+        }
+        else if (node.getNodeType() == ObAstNode.NodeType.strikeThrough) {
+            if (m_skipVerse) return;
+            m_currentFassung.append("<hi type=\"line-through\">");
+        }
+        else if (node.getNodeType() == ObAstNode.NodeType.underline) {
+            if (m_skipVerse) return;
+            m_currentFassung.append("<hi type=\"underline\">");
+        }
+        else if (node.getNodeType() == ObAstNode.NodeType.wikiLink) {
+            if (m_skipVerse) return;
+            ObWikiLinkNode obWikiLinkNode = (ObWikiLinkNode)node;
+            m_currentFassung.append("<a href=\"");
+            if(obWikiLinkNode.isWikiLink())
+                m_currentFassung.append("http://offene-bibel.de/wiki/");
+            m_currentFassung.append(obWikiLinkNode.getLink().replace("&", "&amp;"));
+            m_currentFassung.append("\">");
+            
+            if(obWikiLinkNode.childCount() == 0)
+                m_currentFassung.append(obWikiLinkNode.getLink().replace("&", "&amp;"));
         }
     }
 
@@ -330,12 +381,12 @@ public class ObOsisGeneratorVisitor extends DifferentiatingVisitor<ObAstNode> im
             }
 
             m_currentFassung.append("<reference osisRef=\"" +
-                                            passage.getBook() + "." + passage.getChapter() + "." + passage.getStartVerse() + "\">" +
-                                            passage.getBook() + " " + passage.getChapter() + ", " + passage.getStartVerse() + "</reference>");
+                                            passage.getOsisBookId() + "." + passage.getChapter() + "." + passage.getStartVerse() + "\">" +
+                                            BookNameHelper.getInstance().getGermanBookNameForOsisId(passage.getOsisBookId()) + " " + passage.getChapter() + "," + passage.getStartVerse() + "</reference>");
 
             if(passage.getNextSibling() != null && passage.getNextSibling().getNodeType() == ObAstNode.NodeType.parallelPassage) {
                 m_multiParallelPassage = true;
-                m_currentFassung.append("|");
+                m_currentFassung.append("; ");
             }
             else {
                 m_multiParallelPassage = false;
@@ -389,6 +440,11 @@ public class ObOsisGeneratorVisitor extends DifferentiatingVisitor<ObAstNode> im
                 // Quotations are not allowed inside of <hi/>, so wrap <hi/> around them.
                 m_currentFassung.append("</hi>");          
             }
+            if (node.getParent().isDescendantOf(ObAstNode.NodeType.fat))
+            {
+                // Quotations are not allowed inside of <hi/>, so wrap <hi/> around them.
+                m_currentFassung.append("</hi>");
+            }
 
             if (m_unmilestonedLineGroup) {
                 m_currentFassung.append("<q marker=\"\" eID=\""+m_qTagStart+m_qTagCounter+"\"/>");
@@ -401,6 +457,11 @@ public class ObOsisGeneratorVisitor extends DifferentiatingVisitor<ObAstNode> im
             {
                 // Quotations are not allowed inside of <hi/>, so wrap <hi/> around them.
                 m_currentFassung.append("<hi type=\"italic\">");          
+            }
+            if (node.getParent().isDescendantOf(ObAstNode.NodeType.fat))
+            {
+                // Quotations are not allowed inside of <hi/>, so wrap <hi/> around them.
+                m_currentFassung.append("<hi type=\"bold\">");
             }
 
             if(m_quoteCounter>0)
@@ -440,7 +501,11 @@ public class ObOsisGeneratorVisitor extends DifferentiatingVisitor<ObAstNode> im
 
         else if(node.getNodeType() == ObAstNode.NodeType.hebrew) {
             if(m_skipVerse) return;
-            m_currentFassung.append("</foreign>");
+            if (!node.getParent().isDescendantOf(ObAstNode.NodeType.wikiLink))
+            {
+                // foreign are not allowed inside of <a>, so skip them
+                m_currentFassung.append("</foreign>");
+            }
         }
 
         else if(node.getNodeType() == ObAstNode.NodeType.note) {
@@ -452,9 +517,25 @@ public class ObOsisGeneratorVisitor extends DifferentiatingVisitor<ObAstNode> im
             if (m_skipVerse) return;
             m_currentFassung.append("</hi>");
         }
+        else if(node.getNodeType() == ObAstNode.NodeType.fat) {
+            if (m_skipVerse) return;
+            m_currentFassung.append("</hi>");
+        }
         else if(node.getNodeType() == ObAstNode.NodeType.superScript) {
             if (m_skipVerse) return;
             m_currentFassung.append("</hi>");
+        }
+        else if(node.getNodeType() == ObAstNode.NodeType.strikeThrough) {
+            if (m_skipVerse) return;
+            m_currentFassung.append("</hi>");
+        }
+        else if(node.getNodeType() == ObAstNode.NodeType.underline) {
+            if (m_skipVerse) return;
+            m_currentFassung.append("</hi>");
+        }
+        else if (node.getNodeType() == ObAstNode.NodeType.wikiLink) {
+            if (m_skipVerse) return;
+            m_currentFassung.append("</a>");
         }
     }
 
@@ -505,17 +586,17 @@ public class ObOsisGeneratorVisitor extends DifferentiatingVisitor<ObAstNode> im
         return "<lg sID=\"" + m_lgTag + "\"/>";
     }
 
-	private static final Pattern FIND_GREEK = Pattern.compile("[\\p{IsGreek}]+([\\p{IsCommon}]+[\\p{IsGreek}]+)*");
+    private static final Pattern FIND_GREEK = Pattern.compile("[\\p{IsGreek}]+([\\p{IsCommon}]+[\\p{IsGreek}]+)*");
 
-	private static String tagGreek(String str) {
-		Matcher m = FIND_GREEK.matcher(str);
-		StringBuffer result = new StringBuffer(str.length());
-		while (m.find()) {
-			m.appendReplacement(result, "<foreign xml:lang=\"grc\">$0</foreign>");
-		}
-		m.appendTail(result);
-		return result.toString();
-	}
+    private static String tagGreek(String str) {
+        Matcher m = FIND_GREEK.matcher(str);
+        StringBuffer result = new StringBuffer(str.length());
+        while (m.find()) {
+            m.appendReplacement(result, "<foreign xml:lang=\"grc\">$0</foreign>");
+        }
+        m.appendTail(result);
+        return result.toString();
+    }
 
     class QuoteSearcher implements IVisitor<ObAstNode>
     {
